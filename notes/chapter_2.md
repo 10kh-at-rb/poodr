@@ -69,16 +69,96 @@ However, there are also good reasons to refactor the `Gear` class. It is not _Us
 
 
 ## How to Write Code that Embraces Change
+This section will present two techniques that help to write code that is easy to change later. It will then go into detail on each technique implementing them on the bicycle app we are writing.   
 
 ### How to Depend on Behavior and not Data
+It is better to hide the data behind a method. This makes it easier to change the data later by changing what the method returns. 
+
 
 #### Hide Instance Variables
+Wrap a method around instance variables. Anytime you want that data just call the method. 
+
+Two things to be aware of:
+
+1. Unless you make that method private, anyone can now send a message to the class and get the data. This could be good or bad, deciding which way to go will be discussed in chapter 4 _Creating Flexible Interfaces_. 
+2. You are blurring the distinction between data and objects. Most of the time thinking of everything as objects is fine. 
 
 #### Hide Data Structures
+If you have a methods needs to understand how data in structure in order to use it that means that anytime the data changes you have to rewrite the method. It is better wrap a complex data structure in a `Struct` or even its own `class` so that you can send messages to it to get the data you need.  
+
+This technique is especially important when dealing with data that comes from somewhere else, like another object or user input. That data can change anytime.
 
 ### How to Enforce Single Responsibility Everywhere
+Make sure every method also only does one thing. Ask it the same questions you would ask a class and describe what it does with one sentence being aware anytime "and" or "or" pop up. 
 
 #### Extract Extra Responsibilities from Methods
+Any method, just like a class should have a single responsibility. 
+
+For example:
+
+```ruby
+def diameters
+  wheels.collect {|wheel| wheel.rim + (wheel.tire * 2) }
+end
+```
+
+What does this method do? 
+
+It actually does two things:
+
+* Iterates over the wheels
+* Calculates the diameter of each wheel
+
+How can we make it only do one thing? 
+
+__Separate the iteration from the action that is being performed in each iteration.__
+
+```ruby
+def diameters
+  wheels.collect {|wheel| diameter(wheel)}
+end
+
+def diameter(wheel)
+  wheel.rim + (wheel.tire * 2)
+end
+
+```
+This may seem hurt performance but right now the most important thing is not performance, but writing code that is easy to change. Also you already wrote code that calculated the diameter of a single wheel, now you have a method that makes it clear. This `diameter` method can now be used anytime just might need to find the diameter of just one wheel. 
+
+
+Now for something a little more complicated, remember `gear_inches` from `Gear` class.
+
+```ruby
+def gear_inches
+  ratio * (rim + (tire*2))
+end
+```
+
+* Is `gear_inches` the responsibility of the `Gear` class?
+  That seems reasonable
+* What is the code inside `gear_inches` doing?
+  It is calculating the diameter of a wheel _and_ then calculating the gear_inches.
+
+Recognizing this we break the calculation of the diameter into its own method. 
+
+```ruby
+def gear_inches
+  ratio * diameter
+end
+
+def diameter
+  rim + (tire * 2)
+end
+
+``` 
+
+Now you can ask:
+* Is the diameter of a wheel the responsibility of the `Gear` class?
+  Obvi NOT
+
+Note...
+
+
 
 #### Isolate Extra Responsibilities in Classes
 
