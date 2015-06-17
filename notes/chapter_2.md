@@ -71,7 +71,7 @@ However, there are also good reasons to refactor the `Gear` class. It is not _Us
 ## How to Write Code that Embraces Change
 This section will present two techniques that help to write code that is easy to change later. It will then go into detail on each technique implementing them on the bicycle app we are writing.   
 
-### How to Depend on Behavior and not Data
+### Depend on Behavior  not Data
 It is better to hide the data behind a method. This makes it easier to change the data later by changing what the method returns. 
 
 
@@ -84,7 +84,7 @@ Two things to be aware of:
 2. You are blurring the distinction between data and objects. Most of the time thinking of everything as objects is fine. 
 
 #### Hide Data Structures
-If you have a methods needs to understand how data in structure in order to use it that means that anytime the data changes you have to rewrite the method. It is better wrap a complex data structure in a `Struct` or even its own `class` so that you can send messages to it to get the data you need.  
+If you have methods that need to understand how data is structured in order to use it that means that anytime the data changes you have to rewrite the method. It is better wrap a complex data structure in a `Struct` or even its own `class` so that you can send messages to it to get the data you need.  
 
 This technique is especially important when dealing with data that comes from somewhere else, like another object or user input. That data can change anytime.
 
@@ -123,7 +123,7 @@ def diameter(wheel)
 end
 
 ```
-This may seem hurt performance but right now the most important thing is not performance, but writing code that is easy to change. Also you already wrote code that calculated the diameter of a single wheel, now you have a method that makes it clear. This `diameter` method can now be used anytime just might need to find the diameter of just one wheel. 
+This may = hurt performance but right now the most important thing is not performance, but writing code that is easy to change. Also you already wrote code that calculated the diameter of a single wheel, now you have a method that makes it clear. This `diameter` method can now be used anytime just might need to find the diameter of just one wheel. 
 
 
 Now for something a little more complicated, remember `gear_inches` from `Gear` class.
@@ -154,11 +154,107 @@ end
 
 Now you can ask:
 * Is the diameter of a wheel the responsibility of the `Gear` class?
-  Obvi NOT
+  Obviously not
 
-Note...
+* Should the wheel be in its own class?
+  This is not clear cut, because so far the only type we need information about a wheel is in the context of a gear. The best thing to do now is to make your code easy to change, not to try and predict the future. 
+  
+
+__Important Point__
+
+>You do not have to know where you’re going to use good design practices to get there. Good practices reveal design.
+
+The point of doing these refactorings is not because you know what the final design will be but because they help you discover the design. Refactoring by following these principles leads to:
+
+* __Expose previously hidden qualities__: By enforcing the principle that every method should only do one thing, we found out that our `gear_inches` method calculated the diameter of a wheel, which is definitely not the job of the Gear class.
+* __Avoid the need for comments__: Well organized code is a lot more descriptive than any comment because comments often don't keep up with the changes in the code. 
+* __Encourage reuse__: Because each method does one thing that method is a lot easier to reuse because you know what it will do. It also sets a standard that other programmers will follow. 
+* __Are easy to move to another class__: If you do need to do a re-design of the code, it is a lot easier if each method does only one thing. 
 
 
 
 #### Isolate Extra Responsibilities in Classes
+Just because we realized that `Gear` class is figuring out the diameter of a wheel doesn't mean that we need a `Wheel` class. So far, we only use information about the wheel in the context of a gear, maybe that is the only place we will ever need to know about a wheel's diameter. Remember the point of Object Oriented Design is to make your code easy to change later, committing to a `Wheel` class now is premature. Luckily, Ruby gives us a way to remove the responsibility of figuring out the diameter of the wheel from the `Gear` class without writing another class. We just use a `Struct`. 
 
+So now our `Gear` class looks like:
+
+```ruby
+class Gear
+  attr_reader :chainring, :cog, :wheel
+  
+  def initialize(chainring, cog, rim, tire)
+    @chainring = chainring
+    @cog       = cog
+    @wheel     = Wheel.new(rim, tire)
+  end
+  
+  def ratio
+    chainring/cog.to_f
+  end
+  
+  def gear_inches
+    ratio * wheel.diameter
+  end
+  
+  
+  Wheel = Struct.new(:rim, :tire) do
+    def diameter
+      rim + (tire * 2)
+    end
+  end
+end
+
+```
+
+It is reasonable to expect that since you a writing an app for cyclist you will eventually need a `Wheel` class but you haven't received the information about what exactly you will need that class to do other than give you the diameter of a wheel which you already have nicely isolated in a `Struct`. You may never touch this code again. Remember:
+
+> Design is more the art of preserving changeability than it is the act of achieving perfection. 
+
+
+## Finally, the Real Wheel
+You cyclist friend comes and ask you that she needs the program to calculate the the circumference of a wheel. A new feature request that you are completely prepared for because you enforced single responsibility everywhere. You create the `Wheel` class and add the `#circumference` method to it. 
+
+Now it's no big deal create a `Wheel` class, initialize the `Gear` with an optional wheel.
+
+```ruby
+class Gear
+  attr_reader :chainring, :cog, :wheel
+  def initialize(chainring, cog, wheel=nil)
+    @chainring = chainring
+    @cog       = cog
+    @wheel     = wheel
+  end
+  
+  def ratio
+    chainring/cog.to_f
+  end
+  
+  def gear_inches
+    ratio * wheel.diameter
+  end
+  
+end
+
+class Wheel
+  attr_reader :rim, :tire
+  
+  def initialize(rim, tire)
+    @rim  = rim
+    @tire = tire
+  end
+  
+  def circumference
+    diameter * Math::PI
+  end
+  
+  def diameter
+    rim + (tire * 2)
+  end
+  
+end
+
+```
+
+>Both classes have a single responsibility. The code is not perfect, but in some ways it achieves a higher standard: it is good enough.
+
+## Summary
