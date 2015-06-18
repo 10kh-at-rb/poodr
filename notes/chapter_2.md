@@ -261,3 +261,21 @@ end
 >The code is not perfect, but in some ways it achieves a higher standard: it is good enough.
 
 ## Summary
+This chapter was more about process than result. We had an app to build and we knew we eventually wanted to write a class that had a single responsibility but we did not start off trying to do that. We started by just writing code that met the specs.  But after we got something working we started to ask some questions of our code:
+
+* What does this class do? What messages does it respond to? Should it respond to those messages?
+  We questioned every message that the class responds to and we asked if it made sense that the class responded to this message.
+  
+* If a class responds to a message that it shouldn't, does it matter?
+  Just because the class responds to a message that we think it shouldn't, doesn't mean that we need to create a whole new class just for that method. Maybe the code is good enough right now.
+  
+* What does each method do? Can I make its job more obvious by breaking out any code into its own method?
+  Just like classes methods should also have a single responsibility. By enforcing this everywhere we get a better understanding of what each bit of code is doing, revealing any hidden qualities.
+  
+* How can I hide data and complex data structures behind a method?
+  This is especially important if you don't control the data. When the data changes you won't have to go hunting for every place you used the data. 
+  
+* If I see something that doesn't belong in class, do I need a new class or can I just isolate it some other way?
+  Just because you can do something, doesn't mean you should. The goal is code that is easy to change later. Sometimes the best thing to do is nothing. Other times you can just isolate the offending code somewhere so that when you do get more information you can decide what to do about it. 
+  
+As we ask these questions we discover more and more about our code, things we could not have known at the beginning. 
