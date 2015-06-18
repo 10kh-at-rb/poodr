@@ -1,5 +1,5 @@
 # Designing Classes with a Single Responsibility
-The point of this chapter is to go over the principles and techniques that will help us build a classes that do one thing and are easy to change later. We will go over that belongs in a class and several techniques to make it easy to change later. 
+The point of this chapter is to go over the principles and techniques that will help us build a classes that do one thing and are easy to change later. We will go over what belongs in a class and several techniques to make it easy to change later. 
 
 We can never predict what change will come later so the first thing we do is to make it as simple as possible. We need the code we write to do what is being asked of it now, without trying to predict everything it will be asked to do in the future. However if we follow the Single Responsibility Principle we will make it easy to change later. 
 
@@ -19,29 +19,33 @@ Before you know how to write code that is easy to change you need to know what
 "easy to change" means. One useful definition of easy to change is :
 
 * __Transparent__: it should be clear what will happen to this piece of code and to any other code that depends on it if you make a change.
-* __Reasonable__: any change should be worth the effort it takes to implement. It should not be hard to make a change that doesn't change much. 
+* __Reasonable__: any change should be worth the effort it takes to implement. It should not be hard to make a change that doesn't do much. 
 * __Usable__: You should be able to reuse this code in ways you can't predict.
-* __Exemplary__: The code should set standard for how any future changes should be made. 
+* __Exemplary__: The code should set standard for how any more code should be written. 
 
 So the goal is to write code that is __TRUE__. 
 
 ## How to Create a Class that has a Single Responsibility
-When trying to break up you application into classes start by describing what your application is going to do and look for the nouns. In example program in the book we are going to write a Ruby program that calculates gear ratios for bicycles. So we have two nouns already _bycicle_ and _gear_. We start with gear because it is the thing that will calculate the gear ratio. 
+When trying to break up your application into classes start by describing what your application is going to do and look for the nouns. In the example program we are going to write a Ruby program that calculates gear ratios for bicycles. So we have two nouns already _bicycle_ and _gear_. We start with gear because it is the thing that will calculate the gear ratio. 
 
-We are then asked to calculate the gear inches of of a bicycle and we have the Gear class take two more arguments when being initialized. And now we ask the question: Is this the best way to organized the code?  
+We make a `Gear` class that takes in two parameters, _chainring_ and _cog_ and we write a method `gear_ratio`. This is a simple class with a simple method doing one thing, but then we are asked to calculate the gear inches, which is how are far the bike travels in one revolution of the wheel. 
+
+To write the `gear_inches` method we need to know about the wheel. More specifically the rim diameter and the tire diameter. So we just add two more parameters to the `initialize` method of the `Gear` class. Now if someone wants to get the gear inches of a bicycle they just initialize a new instance of the Gear class passing in `chainring`, `cog`, `rim` and `tire`.  But this breaks any previous code because the `Gear` class now needs four parameters to be initialized.  Now is the time to ask:
+
+Is this the best way to organize the code?
 
 ### Why does Single Responsibility Matter?
-Single Responsibility matters because a class that has does one thing is easy to reuse in ways we can't predict.
+Single Responsibility matters because a class that does one thing is easy to reuse in ways we can't predict.
 
-> Reusable classes are pluggable units of well-defined behavior that have few entanglements.
+> Applications that are easy to change consist of classes that are easy to reuse. Reusable classes are pluggable units of well-defined behavior that have few entanglements.
 
-If the class you want to reuse does more than one thing, you may one day want to do only one of the things that class does but don't be able to reuse it because the responsibilities are mixed up within the class. What happens there is:
+If the class you wrote does more than one thing, when the day comes that you want to reuse it you may not be able to because the responsibilities are all mixed up. What can happen :
 
 1. You duplicate the code you need. This is bad because anytime you want to make a change you have to go find everywhere the code is duplicated to make a change.
 
 2. You structured the code in such a way that you could just get the things you want out of the class but since the class your reusing has many responsibilities it has many reasons to change. Any change can break the thing you are reusing the class for. 
 
-A we write classes that have a single responsibility because we can't tell the future.
+We write classes that have a single responsibility because we can't tell the future.
 
 > Design is more the art of preserving changeability than it is the act of achieving perfection. 
 
@@ -65,8 +69,7 @@ Classes don't have to be super narrowly defined pieces of code. They just have t
 ### How to Know When to Make Design Decisions
 Though `Gear` clearly does more than one thing, it might still be a good choice to leave it as is. We may never need to change it again and even if we do end up having to make a change we have no idea what that change will be. Right now we have a very small application that we completely understand. It is _Transparent_ and _Reasonable_. You know exactly what it does and any change would be trivial because the program is so small. It perfectly fine to leave the `Gear` class as is.
 
-However, there are also good reasons to refactor the `Gear` class. It is not _Usable_ nor _Exemplary_. We cannot reuse the `Gear` class somewhere else without worrying about rim size and tire size. It also is not a good example of how we want the rest of our code to be organized. The way you organize code now will set the standard for how the rest of the code in your application is organized. We say we want `Gear` to _Calculate the effect a gear has on a bicycle_ but it knows about tire size and rim size. What does that have to do about the effect a gear has on a bicycle.  
-
+However, there are also good reasons to refactor the `Gear` class. It is not _Usable_ nor _Exemplary_. We cannot reuse the `Gear` class somewhere else without worrying about rim size and tire size. It also is not a good example of how we want the rest of our code to be organized. The way you organize code now will set the standard for how the rest of the code in your application is organized. We say we want `Gear` to _Calculate the effect a gear has on a bicycle_ but it knows about tire size and rim size.
 
 ## How to Write Code that Embraces Change
 This section will present two techniques that help to write code that is easy to change later. It will then go into detail on each technique implementing them on the bicycle app we are writing.   
@@ -123,7 +126,7 @@ def diameter(wheel)
 end
 
 ```
-This may = hurt performance but right now the most important thing is not performance, but writing code that is easy to change. Also you already wrote code that calculated the diameter of a single wheel, now you have a method that makes it clear. This `diameter` method can now be used anytime just might need to find the diameter of just one wheel. 
+This may hurt performance but right now the most important thing is not performance, but writing code that is easy to change. Also you already wrote code that calculated the diameter of a single wheel, now you have a method that makes it clear. This `diameter` method can now be used anytime just might need to find the diameter of just one wheel. 
 
 
 Now for something a little more complicated, remember `gear_inches` from `Gear` class.
@@ -157,14 +160,14 @@ Now you can ask:
   Obviously not
 
 * Should the wheel be in its own class?
-  This is not clear cut, because so far the only type we need information about a wheel is in the context of a gear. The best thing to do now is to make your code easy to change, not to try and predict the future. 
+  This is not clear cut, because so far the only time we need information about a wheel is in the context of a gear. The best thing to do now is to make your code easy to change, not to try and predict the future. 
   
 
 __Important Point__
 
 >You do not have to know where you’re going to use good design practices to get there. Good practices reveal design.
 
-The point of doing these refactorings is not because you know what the final design will be but because they help you discover the design. Refactoring by following these principles leads to:
+The point of doing these refactorings is not because you know what the final design will be but because they help you discover the design. Refactoring by following these principles leads to methods that:
 
 * __Expose previously hidden qualities__: By enforcing the principle that every method should only do one thing, we found out that our `gear_inches` method calculated the diameter of a wheel, which is definitely not the job of the Gear class.
 * __Avoid the need for comments__: Well organized code is a lot more descriptive than any comment because comments often don't keep up with the changes in the code. 
@@ -173,7 +176,7 @@ The point of doing these refactorings is not because you know what the final des
 
 
 
-#### Isolate Extra Responsibilities in Classes
+#### Isolate Extra Responsibilities 
 Just because we realized that `Gear` class is figuring out the diameter of a wheel doesn't mean that we need a `Wheel` class. So far, we only use information about the wheel in the context of a gear, maybe that is the only place we will ever need to know about a wheel's diameter. Remember the point of Object Oriented Design is to make your code easy to change later, committing to a `Wheel` class now is premature. Luckily, Ruby gives us a way to remove the responsibility of figuring out the diameter of the wheel from the `Gear` class without writing another class. We just use a `Struct`. 
 
 So now our `Gear` class looks like:
@@ -255,6 +258,6 @@ end
 
 ```
 
->Both classes have a single responsibility. The code is not perfect, but in some ways it achieves a higher standard: it is good enough.
+>The code is not perfect, but in some ways it achieves a higher standard: it is good enough.
 
 ## Summary
