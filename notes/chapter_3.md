@@ -54,12 +54,17 @@ These are four things to look for when checking for dependencies of a class:
 * __Know the order of arguments that must be passed to a message__: `Gear` knows that to initialize a new `Wheel` it needs to pass `rim` then `tire`.
 
 
-Our `Gear` class knows way too many things. This makes it _unreasonable_. Remember that code that is reasonable is code where any change made worth the effort it takes to implement. Right now, a small change in `Wheel` could cause several changes in `Gear`. 
+Our `Gear` class knows way too many things. This makes it _unreasonable_. Remember that code that is reasonable is code where any change made is worth the effort it takes to implement. Right now, a small change in `Wheel` could cause several changes in `Gear`. 
  
 ### Coupling Between Objects
-
+Right now we would say that `Gear` and `Wheel` are tightly coupled. If you would like to use`Gear` in a another context, `Wheel` has to come with it. That means you can't reuse `Gear` in any place that doesn't also have `Wheel` defined. It does not have to be this way. 
+ 
 ### Other Dependencies
+There are two other kinds of dependencies that are not going to be dealt  with in this chapter. First there is a dependency that happens when one object sends a a chained message across several objects. This is a dangerous kind of dependency because any change on anything along the chain can break your code in several places. This is a violation of the "Law of Demeter" and will be dealt with in in Chapter 4, Creating Flexible Interfaces.
 
+The second kind of dependency are tests. The test you write depend on code. So when the code changes, the tests often have to change with them. This becomes frustrating when the new code still does the same thing but the tests fail because they depended on some specific thing from the old code. This will be dealt with in Chapter 9, Designing Cost-Effective Tests. 
+
+The rest of this chapter will be about to avoid any unnecessary dependencies from the the four dependencies mentioned in the _Recognizing Dependencies_ section. 
 
 ## How to write loosely coupled code
 
