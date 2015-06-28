@@ -10,7 +10,7 @@ This section will focus on where to put your code.
 ### How to Group Methods into Classes
 You will put your methods in a class but at the beginning of your project you cannot possibly get this right, so don't worry about it too much just start.
 
-> Design is more the art of preserving changeability than it is the act of achieving perfection.
+ 
 
 
 ### How to Organize Code to Allow for Easy Changes
