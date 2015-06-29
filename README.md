@@ -30,7 +30,7 @@ easy to change.
 
 Lets look at the sname class and what it does
 
-'''javascript
+```javascript
     (function () {
       "use strict";
       if ( typeof Snake === "undefined") {
@@ -99,7 +99,7 @@ Lets look at the sname class and what it does
         return this._dup(this.segments[this.segments.length - 1]);
       };
     })();
-'''
+```
 
 To break this down bit by bit we start with: 
 
