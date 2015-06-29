@@ -103,14 +103,15 @@ Lets look at the sname class and what it does
 
 To break this down bit by bit we start with: 
 
-      var snake = Snake.snake = function (options) {
-        this.dir = "E";
-        this.segments = options.startingPos; 
-        this.color = options.color;
-        this.score = 0;
-        this.shortcuts = options.shortcuts.join(", ");
-        key(this.shortcuts, this.turn.bind(this));
-
+```javascript
+var snake = Snake.snake = function (options) {
+  this.dir = "E";
+  this.segments = options.startingPos; 
+  this.color = options.color;
+  this.score = 0;
+  this.shortcuts = options.shortcuts.join(", ");
+  key(this.shortcuts, this.turn.bind(this));
+```
 This snake is initialized with an options object. The object contains:
 
 * `this.dir = "E"` - This sets the initial direction the snake is moving. It is
