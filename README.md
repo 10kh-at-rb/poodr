@@ -217,3 +217,4 @@ This function does two two things:
 })
  ```
 `addSegment` changes the value of the `head` based on the direction the snake is going. This is first done by calling `this.head()` to get a duplicate of the head. Then the values are changed based on direction and then the new head is pushed to head of  the snake.
+ 
