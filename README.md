@@ -3,37 +3,36 @@
 This a repo to collect the notes and code from reading Practice Object-Oriented
 Design in Ruby by Sandi Metz.
 
-## Why POODR?
-I'm reading POODR because I want to be a better software engineer. I've watched
-several of Sandi Metz's talks from various Ruby conferences and she presents
-principles and techniques to help engineers write software that is designed to
-be easy to maintain and easy to change. These are the goals behind
-Object-Oriented Design(OOD).
+## What's all this about?
+I'm reading [Pratical Object-Oriented Design in Ruby by Sandi Metz](http://www.poodr.com/)(POODR) because I want
+to be a better software engineer. I've watched several of Metz's talks
+from various Ruby conferences and she presents principles and techniques to help
+engineers write software that is designed to be easy to maintain and easy to
+change. These are the goals behind Object-Oriented Design(OOD).
 
 This is a series of posts that goes through chapters 2 through 9 of POODR trying
-to explain the principles learned through the refactoring a two player snake
+to explain the principles learned through the refactoring of a two player snake
 game I wrote in JavaScript. [Play the game here](http://emmanuelgenard.com/two_snake/) and
 [check out the repo](https://github.com/edgenard/two_snake). I'm also keeping
 notes on each chapter [here](https://github.com/edgenard/poodr/tree/master/notes) these mostly to make sure I actually understand what I read.
 
-I don't think it should matter I'm refactoring a JavaScript code because these
+I don't think it should matter I'm refactoring JavaScript code because these
 principles of Object-Oriented Design should apply to any language where Object-Oriented Programming is possible. I'm  aiming to do three things:
 
 * Apply each chapter's principle to all three classes in the game, `Snake`,
 `Board` and `Snake-View`.
-*  Go through one chapter a week, including all the refactoring and the post talking about it.(Ambitious)
+*  Go through one chapter a week, including all the refactoring and the posts explaining the process.(Ambitious)
 * Add new features. (Super Ambitious)
 
 
+## How to Design a Class with a Single Responsibility: Snake-Class
 
+This is the first in a series of post based on [POODR](http://www.poodr.com/)
+where I try to apply the principles and techniques to refactoring [a two player snake game I wrote](https://github.com/edgenard/two_snake).
 
-## How to Design a Class with a Single Responsibility
-We are going to refactor an already built snake game. Seeing if we can improve
-the organization of the code to make it easy to change.
-
-The game is broke up into three classes, Snake, Board, Snake-View. The game
-works fine now but I want to add some new features and I would like to make it
-easy to change.
+_I know JavaScript doesn't have classes and what we are using is a constructor
+function that is just like any other function. I'm going to call it a class,
+because that's how I'm thinking about it._
 
 Lets look at the snake class and what it does
 
@@ -122,7 +121,7 @@ var snake = Snake.snake = function (options) {
 This snake is initialized with an options object. The object contains:
 
 * `this.dir = "E"` - This sets the initial direction the snake is moving. It is
-"E" for ease.
+"E" for east.
 
 * `this.segments = options.StartingPos` - This is where on the board the snake
 starts the game. It is a two dimensional array. For a 1 player game the snake
@@ -160,7 +159,7 @@ snake.prototype.move = function () {
 ```
 
 This function does two two things:
- * It removes the first segment in the snake. It chops off the tail
+ * It removes the first segment in the snake which represents the snakes tail.
  * It calls a method that adds a segment to the head of the snake.
 
 
@@ -223,4 +222,28 @@ This function does two two things:
  };
 })
  ```
-`addSegment` changes the value of the `head` based on the direction the snake is going. This is first done by calling `this.head()` to get a duplicate of the head. Then the values are changed based on direction and then the new head is pushed to head of  the snake.
+
+* `addSegment` changes the value of the `head` based on the direction the snake is going. This is first done by calling `this.head()` to get a duplicate of the head. Then the values are changed based on direction and then the new head is pushed to end of the snakes `segments` which represents the front of the snake.
+
+### What Now?
+The first part of chapter essentially says that when you first write your class
+not to design anything, just get something that works. It is only after having
+something that you can begin to ask questions of it. It is in asking questions
+of your code that a design emerges. You ask questions that lead you to discover
+what kind of thing you've written which will reveal the things you need to do
+to make sure that your class follows the Single Responsibility Principle which
+will make it easy to change. But first..
+
+### What does "code that is easy to change" mean?
+In the book Sandi provides the definition that code that is easy to change is __TRUE__:
+
+* __Transparent__: it should be clear what will happen to this piece of code and to any other code that depends on it if you make a change.
+* __Reasonable__: a little change should not take a lot of work.
+* __Usable__: you should be able to reuse this code in ways you can't predict.
+* __Exemplary__: The code should set standard for how any more code should be written.
+
+So that is the goal, to write code that is __TRUE__.
+
+### What does Single Responsibility mean and how does it make our code __TRUE__?
+The SRP is not about having a class that does some very teenie tiny thing. It is
+really more about having a class in which every method defined within it is related to its purpose. Object Oriented Programming is about sending messages to objects. So an object that follows the SRP is one in which each message it responds to makes sense for that object.   

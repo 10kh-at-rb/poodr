@@ -10,16 +10,13 @@ This section will focus on where to put your code.
 ### How to Group Methods into Classes
 You will put your methods in a class but at the beginning of your project you cannot possibly get this right, so don't worry about it too much just start.
 
- 
-
-
 ### How to Organize Code to Allow for Easy Changes
 
 Before you know how to write code that is easy to change you need to know what
 "easy to change" means. One useful definition of easy to change is :
 
 * __Transparent__: it should be clear what will happen to this piece of code and to any other code that depends on it if you make a change.
-* __Reasonable__: any change should be worth the effort it takes to implement. It should not be hard to make a change that doesn't do much.
+* __Reasonable__: a little change should not take a lot of work.
 * __Usable__: You should be able to reuse this code in ways you can't predict.
 * __Exemplary__: The code should set standard for how any more code should be written.
 
