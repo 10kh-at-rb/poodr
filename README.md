@@ -4,19 +4,26 @@ This a repo to collect the notes and code from reading Practice Object-Oriented
 Design in Ruby by Sandi Metz.
 
 ## Why POODR?
-I'm reading POODR because I want to be a good software engineer. I've watched
+I'm reading POODR because I want to be a better software engineer. I've watched
 several of Sandi Metz's talks from various Ruby conferences and she presents
 principles and techniques to help engineers write software that is designed to
-be easy to maintain and easy to change. She calls these techniques and
-principles Object-Oriented Design (OOD).
+be easy to maintain and easy to change. These are the goals behind
+Object-Oriented Design(OOD).
 
-I'll be writing about what I learn about OOD after I'm done with each chapter
-starting from chapter 2, Designing Classes with a Single Responsibility. I'll
-have notes from each chapter in the [notes](notes) folder and here I'll be
-writing a tutorial based on what I learned from each chapter using my
-[TwoSnake](https://github.com/edgenard/two_snake) as an example. It is written
-in Javascript but I think it will work because these principles seem to be
-universal across programming languages.
+This is a series of posts that goes through chapters 2 through 9 of POODR trying
+to explain the principles learned through the refactoring a two player snake
+game I wrote in JavaScript. [Play the game here](http://emmanuelgenard.com/two_snake/) and
+[check out the repo](https://github.com/edgenard/two_snake). I'm also keeping
+notes on each chapter [here](https://github.com/edgenard/poodr/tree/master/notes) these mostly to make sure I actually understand what I read.
+
+I don't think it should matter I'm refactoring a JavaScript code because these
+principles of Object-Oriented Design should apply to any language where Object-Oriented Programming is possible. I'm  aiming to do three things:
+
+* Apply each chapter's principle to all three classes in the game, `Snake`,
+`Board` and `Snake-View`.
+*  Go through one chapter a week, including all the refactoring and the post talking about it.(Ambitious)
+* Add new features. (Super Ambitious)
+
 
 
 
@@ -28,7 +35,7 @@ The game is broke up into three classes, Snake, Board, Snake-View. The game
 works fine now but I want to add some new features and I would like to make it
 easy to change.
 
-Lets look at the sname class and what it does
+Lets look at the snake class and what it does
 
 ```javascript
     (function () {
@@ -217,4 +224,3 @@ This function does two two things:
 })
  ```
 `addSegment` changes the value of the `head` based on the direction the snake is going. This is first done by calling `this.head()` to get a duplicate of the head. Then the values are changed based on direction and then the new head is pushed to head of  the snake.
- 
