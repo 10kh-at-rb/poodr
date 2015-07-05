@@ -246,4 +246,37 @@ So that is the goal, to write code that is __TRUE__.
 
 ### What does Single Responsibility mean and how does it make our code __TRUE__?
 The SRP is not about having a class that does some very teenie tiny thing. It is
-really more about having a class in which every method defined within it is related to its purpose. Object Oriented Programming is about sending messages to objects. So an object that follows the SRP is one in which each message it responds to makes sense for that object.   
+really more about having a class in which every method defined within it is related to its purpose. Object Oriented Programming is about sending messages to objects. So an object that follows the SRP is one in which each message it responds to makes sense for that object. To find out if a class is following the SRP we have then to ask it questions as if it were a person.
+
+Before we ask our `Snake` class questions we have to see if it follows the SRP we first have to ask what about the SRP that makes our code easy to change, that makes it __TRUE__?
+
+If your class does more than one thing you can never really reuse it in a different context. What happens is that the two things that your class does are usually entangled with each other. So that you have two bad choices.
+
+1. Copy the code and paste the code you want to use. This is bad because you then have to maintain that code in two or more places. If anything changes you have to go everywhere that code is written to change it.
+
+2. Reuse the class anyway. If you wrote the class in such a way that you can just use the things you want out of it, you can just reuse it. But this is bad because your class has more than one reason to change. If one of the other things it does requires a change it is may change the thing you are using.
+
+
+The ultimate aim is code that is easy to change and easy to maintain.
+
+> Applications that are easy to change consist of classes that are easy to reuse. Reusable classes are pluggable units of well-defined behavior that have few entanglements.
+
+### How do we find out if a class is following the SRP?
+
+The short answer is that we ask it questions. We will pretend the snake class is actually a little snake and every method call we can make on is a question we can ask it.
+
+Let's call the snake Charlie, we would ask Charlie,
+
+* What direction are you moving in? `this.dir`
+* What color are you? `this.color`
+* What are your segments? `this.segments`
+* Will duplicate this array? `this._dup`
+* How many points have you earned? `this.score`
+* Will you please turn in this direction? `this.turn`
+* Will you please move? `this.move`
+* Will you please add a segment to yourself? `this.segment`
+* Will you please give me a duplicate of your head? `this.head`
+
+Most of these are reasonable questions to ask Charlie, there is one that sounds
+a ridiculous but if anyone should be able to give a duplicate of it's head its Charlie. It makes no sense that Charlie should know how to duplicate an array.
+That is not something Charlie needs to know. 
