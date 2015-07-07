@@ -263,20 +263,61 @@ The ultimate aim is code that is easy to change and easy to maintain.
 
 ### How do we find out if a class is following the SRP?
 
-The short answer is that we ask it questions. We will pretend the snake class is actually a little snake and every method call we can make on is a question we can ask it.
+The first thing we do when we want to do is ask the ourselves what we want our class to do.
 
-Let's call the snake Charlie, we would ask Charlie,
+#### What is the purpose of the `Snake` class?
+This is what I want the snake to do
+
+* Be able to say how big it is.
+* Be able to say and update the snakes score.
+* Be able to say it's direction.
+* Be able to grow itself.
+* Respond to inputs that change it's direction.
+* Be able to move itself.
+
+Is this too many things? Can I describe the responsibility of the `Snake` class in one sentence without using _and_? Without using _or_?  It seems to me that I want to snake to do two types of things, keep track of it's current state and change it's current state.
+
+I can say that _The `Snake` class is responsible for the current state of the snake in the game_. I think this sentence captures all of it's responsibilities.
+
+#### Is everything in the `Snake` class related to it's purpose?
+
+Now that we know what we want the `Snake` class to do we can see if everything in it is related to it's purpose.  We will pretend the snake class is actually someone we can talk to and every method defined within it is a question we can ask. Then we analyze these questions in relation to it's purpose.
+
+Let's call the snake Charlie and ask Charlie,
 
 * What direction are you moving in? `this.dir`
 * What color are you? `this.color`
 * What are your segments? `this.segments`
-* Will duplicate this array? `this._dup`
+* Will you please duplicate this array? `this._dup`
 * How many points have you earned? `this.score`
+* What keypresses do you respond to? `this.shortcuts`
 * Will you please turn in this direction? `this.turn`
 * Will you please move? `this.move`
-* Will you please add a segment to yourself? `this.segment`
-* Will you please give me a duplicate of your head? `this.head`
+* Will you please add a segment to yourself? `this.addSegment`
+* Will you please give me a copy of your head? `this.head`
 
-Most of these are reasonable questions to ask Charlie, there is one that sounds
-a ridiculous but if anyone should be able to give a duplicate of it's head its Charlie. It makes no sense that Charlie should know how to duplicate an array.
-That is not something Charlie needs to know. 
+Most of these are reasonable questions to ask Charlie. There three that I think are suspect:
+
+* Will you please give me a copy of your head? `this.head`
+* What keypresses do you respond to? `this.shortcuts`?
+* Will you please duplicate this array? `this._dup`
+
+I think the `this.head` and `this.shortcuts` are defensible because even though they are not directly related to the responsibility of the class, the way the class is structure, it would not be able to fulfill it's responsibility without them. It needs to know the shortcuts to be able know what direction the user wants it to move. The `head` method is a little weirder but it's needed because it's how the snake is able to `addSegment` which it also needs to `move`. I also think it makes sense for the snake to be one who is responsible to know where it's head and be able to give a copy of it, if needed.
+
+Duplicating an array is harder to defend. Duplicating an array is not something a snake needs to know how to do. This something that we should think about removing from the `Snake` class and maybe moving on to it's own class.  But first...
+
+
+### When to make Design Decisions
+
+
+
+### Single Responsibility at the class level is not enough.
+
+
+#### Write Code to Embrace Change
+
+
+#### Single Responsibility for every method.
+
+
+### Conclusion
