@@ -25,16 +25,16 @@ principles of Object-Oriented Design should apply to any language where Object-O
 * Add new features. (Super Ambitious)
 
 
-## How to Design a Class with a Single Responsibility: Snake-Class
+## How to Design a Class with a Single Responsibility: Snake Class
 
 This is the first in a series of post based on [POODR](http://www.poodr.com/)
-where I try to apply the principles and techniques to refactoring [a two player snake game I wrote](https://github.com/edgenard/two_snake).
+where I try to apply the principles and techniques of Object-Oriented Design(OOD) to refactoring [a two player snake game I wrote](https://github.com/edgenard/two_snake).
 
 _I know JavaScript doesn't have classes and what we are using is a constructor
 function that is just like any other function. I'm going to call it a class,
 because that's how I'm thinking about it._
 
-Lets look at the snake class and what it does
+Lets look at the `Snake` class and what it does
 
 ```javascript
     (function () {
@@ -43,7 +43,7 @@ Lets look at the snake class and what it does
           window.Snake = {};
       }
 
-      var snake = Snake.snake = function (options) {
+      var snake = Snake.Snake = function (options) {
         this.dir = "E";
         this.segments = options.startingPos;
         this.color = options.color;
@@ -68,6 +68,7 @@ Lets look at the snake class and what it does
       };
       snake.prototype.turn = function (event, handler) {
         var direction = handler.shortcut;
+
         if (direction === "up" || direction === "w") {
 
           if(this.dir !== "S") this.dir = "N";
@@ -77,8 +78,11 @@ Lets look at the snake class and what it does
           if (this.dir !== "N") this.dir = "S";
 
         } else if (direction === "right" || direction === "d"){
+
           if(this.dir !== "W") this.dir = "E";
+
         }else {
+
           if(this.dir !== "E") this.dir = "W";
         }
       };
@@ -110,7 +114,7 @@ Lets look at the snake class and what it does
 To break this down bit by bit we start with:
 
 ```javascript
-var snake = Snake.snake = function (options) {
+var snake = Snake.Snake = function (options) {
   this.dir = "E";
   this.segments = options.startingPos;
   this.color = options.color;
@@ -125,22 +129,22 @@ This snake is initialized with an options object. The object contains:
 
 * `this.segments = options.StartingPos` - This is where on the board the snake
 starts the game. It is a two dimensional array. For a 1 player game the snake
-will start at [[0,0],[0,1]] if its a two player game the second snake will be
-added at [[19,0], [19, 1]]. Those two positions represent the top-left and
-bottom-left of the board. It is set to `this.segments` which does double duty of representing the position of the snake on the board and the snakes "body". For instance we grow the snake by adding a segment to `this.segments`x
+will start at `[[0,0],[0,1]]` if its a two player game the second snake will be
+added at `[[19,0], [19, 1]]`. Those two positions represent the top-left and
+bottom-left of the board. It is set to `this.segments` which does double duty of representing the position of the snake on the board and the snakes "body". For instance we grow the snake by adding a segment to `this.segments`.
 
  ![snake_starting_position](images/snake_start.png)
 
-* `this.color = options.color` = This sets the snake's color. As you can see in
-the picture above it will either be black or green.
+* `this.color = options.color` - This sets the snake's color. As you can see in
+the picture above it will be black or green.
 
 * `this.score = 0` - This sets the initial score of the snake.
 
 * `this.shortcuts = options.shortcuts.join(", ")` - These are the keyboard
 shortcuts that will allow the user to set the snakes direction. It comes in as
 an array of either `["up", "left", "down" "right"]` or `["w", "a", "s", "d"]`.
-The array is turned into a string with spaces between each word like "up, left,
-down, right".
+The array is turned into a string with spaces between each word like `"up, left,
+down, right"`.
 
 * `key(this.shortcuts, this.turn.bind(this))` - This is an event handler using
 the keymaster.js library. When any of the shortcut keys are pressed, it will
@@ -159,8 +163,8 @@ snake.prototype.move = function () {
 
 This function does two two things:
  * It removes the first segment in the snake which represents the snakes tail.
- * It calls a method that adds a segment to the head of the snake.
- * For example: `[[0,0], [0,1]]` becomes `[[0,1], [0,2]]` if the snake is moving east.
+ * It calls a method that adds a segment to the end of snake.
+ * For example: `[[0,0], [0,1]]` becomes `[[0,1], [0,2]]` if the snake is moving east, `[[0,1], [1,1]]` if the snake is going south.
 
 
  ```javascript
@@ -228,13 +232,11 @@ This function does two two things:
 * `head` - returns a duplicate of the snakes head.
 
 ### What Now?
-The first part of chapter essentially says that when you first write your class
-not to design anything, just get something that works. It is only after having
-something that you can begin to ask questions of it. It is in asking questions
-of your code that a design emerges. Do not do a Big Up Front Design(BFUD).
 
-You ask questions that lead you to discover what kind of thing you've written
-which will reveal the things you need to do to make sure that your class is easy to change.
+
+The first part of the Chapter 2 in POODR says to avoid design until you have something to work with. You can't possibly get it right the first time so don't even try. Write something that works and then refactor it using the principles of OOD as your guidelines.
+
+ We use the principles of OOD by asking questions that reveal things about our code. As we reveal more and more about our code, the design emerges.
 
 Remember:
 
@@ -242,8 +244,9 @@ Remember:
 
 But before that...
 
-### What does "code that is easy to change" mean?
-In the book Sandi provides the definition that code that is easy to change is __TRUE__:
+### What does it mean to have code that is easy to change?
+
+In the book Metz provides the definition that code that is easy to change is __TRUE__:
 
 * __Transparent__: it should be clear what will happen to this piece of code and to any other code that depends on it if you make a change.
 * __Reasonable__: a little change should not take a lot of work.
@@ -262,7 +265,7 @@ If your class does more than one thing you can never really reuse it in a differ
 
 1. Copy and paste the code you want to use. This is bad because you then have to maintain that code in two or more places. If anything changes you have to go everywhere that code is written to change it.
 
-2. Reuse the class anyway. If you wrote the class in such a way that you can just use the things you want out of it, you can just reuse it. This is even worse because your class has many reasons to change and any change can break things without any clear reason why. Your code stops being transparent.
+2. Reuse the class anyway. If you wrote the class in such a way that you can just use the things you want out of it, you can just reuse it. This is even worse because your class has many reasons to change and any change can break things without any clear way to figure out why. Your code stops being transparent.
 
 These are the reasons to work toward the SRP.
 
@@ -315,18 +318,19 @@ Most of these are reasonable questions to ask Charlie. There three that I think 
 * What keypresses do you respond to? `this.shortcuts`?
 * Will you please duplicate this array? `this._dup`
 
-I think the `this.head` and `this.shortcuts` are defensible because though they are not directly related to the responsibility of the class, the way the class is structured, it would not be able to fulfill it's responsibility without them.
+I think the `this.head` and `this.shortcuts` are defensible even though they are not directly related to the responsibility of the class, the way the class is structured, it would not be able to fulfill it's responsibility without them.
 
-It needs to know the shortcuts to be able know what direction the user wants it to move. The `head` method is a little weirder but it's needed because it's how the snake is able to `addSegment` which it also needs to `move`. I also think it makes sense for the snake to be one who is responsible for giving a copy of its head.
+It needs to know the shortcuts to be able know what direction the user wants it to move. The `head` method is a little weirder but it's needed because it's how the snake is able to `addSegment` which it also needs to `move`. I also think it makes sense for the Charlie to be one who is responsible for giving a copy of his head.
 
-Duplicating an array is harder to defend. Duplicating an array is not something a snake needs to know how to do. This something that we should think about removing from the `Snake` class moving to it's own class.
-
+Duplicating an array is harder to defend. Duplicating an array is not something Charlie needs to know how to do. This is something that we should think about removing from the `Snake` class and moving to it's own class.
 
 But before we do that ...
 
 
 ### How de we know when to make design decisions?
-Before we go around creating classes all over the place we need to consider that it might be better to do nothing. It is clear what the class does(__T__), it's small enough that any change would not be much work(__R__), it could be reused as a moving-growing-thing somewhere else(__U__) and though not a perfect model for future classes it's pretty close(__E__). So I'm going to keep it in the `Snake` class but make it obvious that it doesn't really belong there for future maintainers(especially me).
+Before we go around creating classes all over the place we need to consider that it might be better to do nothing. It is clear what the class does(__T__), it's small enough that any change would not be much work(__R__), it could be reused as a moving-growing-thing somewhere else(__U__) and though not a perfect model for future classes it's pretty close(__E__).
+
+So I'm going to keep the `dup` method in the `Snake` class but make it obvious that it doesn't really belong there for future maintainers(especially me).
 
 So the `Snake` now looks like:
 
@@ -389,12 +393,15 @@ So the `Snake` now looks like:
       };
 
       snake.prototype.head = function () {
+        //Changed this
         return util.dup(this.segments[this.segments.length - 1]);
       };
 
 
       //Utility function, may need to be moved
-      var util = Snake.Util.dup = function (arr) {
+      var util = Snake.Util = {};
+
+      util.dup = function (arr) {
         var newArr = [];
         arr.forEach(function(el, i){
           newArr[i] = el;
@@ -402,21 +409,25 @@ So the `Snake` now looks like:
         return newArr;
       };
 
-
-
     })();
 ```
 
+But wait there's more...
+
+### Single Responsibility at the class level is not enough
+Just making sure that every method in the class is related to its purpose is not enough to make a __TRUE__ class. The ultimate goal is not the SRP, it is a class that is easy to change and maintain. There are some techniques of dealing with the data in your class that will make it easier to change and we should also examine every method so make sure that they also follow the SRP.
+
+#### Depend on behavior not data
+If your class takes in some data and pretty much every class you write will because programming is mostly doing stuff to data. Anytime you use the data inside one of the methods you leave yourself exposed to pain in the future. Eventually your code will change, which means your data will change. Every place you used that data will also have to be changed. Instead it's often better to wrap the data in a method. If something changes you just have change what that method returns.
+
+##### Hide Instance Variables
+
+
+##### Hide Data Structures
 
 
 
-### Single Responsibility at the class level is not enough.
-
-
-#### Write Code to Embrace Change
-
-
-#### Single Responsibility for every method.
+#### Single Responsibility for every method
 
 
 ### Conclusion
